@@ -29,9 +29,9 @@ class Spider(scrapy.Spider):
     def start_requests(self):
         for index, body in enumerate(self.ajax_bodys):
             request = Request(url = self.host + self.filterPage,
-                          method = 'post',
-                          body = body,
-                          callback = self.parse)
+                              method = 'post',
+                              body = body,
+                              callback = self.parse)
             request.meta['current_page'] = 1
             request.meta['body_index'] = index
             yield request
@@ -51,7 +51,6 @@ class Spider(scrapy.Spider):
             fund_type_suffix = u'小盘型'
         else:
             pass
-        logging.debug('fund_type_suffix_____________>' + fund_type_suffix)
         for tr in trs:
             item = FundbotItem()
 
@@ -69,16 +68,15 @@ class Spider(scrapy.Spider):
             item['last_3year'] = self.formatPercent(tr.xpath('td[12]/span/text()').extract_first())
 
             request = Request(url = self.host + detail_path,
-                          callback=self.parse_fund)
+                              callback=self.parse_fund)
             request.meta['item'] = item
             yield request
 
         if current_page < pages:
             request = Request(url = self.host + self.filterPage,
-                        method = 'post',
-                        body = current_body + '&page=' + str(current_page + 1),
-                        callback = self.parse)
-            logging.debug('current page-------------->' + current_body + '&page=' + str(current_page + 1))
+                              method = 'post',
+                              body = current_body + '&page=' + str(current_page + 1),
+                              callback = self.parse)
             request.meta['body_index'] = body_index
             request.meta['current_page'] = current_page + 1
             yield request
